@@ -110,6 +110,14 @@ action_class do
   def cert_location
     @location ||= new_resource.user_store ? 'CurrentUser' : 'LocalMachine'
   end
+  
+  # returns windows friendly version of the provided path,
+  # ensures backslashes are used everywhere
+  # copied from windows_helper.rb - workaround as script is not recognising this function.
+  # include Windows::Helper should include this.
+  def win_friendly_path(path)
+      path.gsub(::File::SEPARATOR, ::File::ALT_SEPARATOR || '\\') if path
+  end
 
   def cert_script(persist)
     cert_script = '$cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2'
