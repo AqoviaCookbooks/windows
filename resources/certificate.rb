@@ -18,7 +18,10 @@
 # limitations under the License.
 #
 
-include Windows::Helper
+require 'chef/util/path_helper'
+
+chef_version_for_provides '< 14.7' if respond_to?(:chef_version_for_provides)
+resource_name :windows_certificate
 
 property :source, String, name_property: true, required: true
 property :pfx_password, String
@@ -121,7 +124,7 @@ action_class do
 
   def cert_script(persist)
     cert_script = '$cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2'
-    file = win_friendly_path(new_resource.source)
+    file = Chef::Util::PathHelper.cleanpath(new_resource.source)
     cert_script << " \"#{file}\""
     if ::File.extname(file.downcase) == '.pfx'
       cert_script << ", \"#{new_resource.pfx_password}\""
