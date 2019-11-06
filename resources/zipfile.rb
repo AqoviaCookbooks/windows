@@ -33,7 +33,7 @@ action :unzip do
   Chef::Log.debug("unzip #{new_resource.source} => #{new_resource.path} (overwrite=#{new_resource.overwrite})")
 
   cache_file_path = if new_resource.source =~ %r{^(file|ftp|http|https):\/\/} # http://rubular.com/r/DGoIWjLfGI
-                      uri = as_uri(source)
+                      uri = as_uri(new_resource.source)
                       local_cache_path = "#{Chef::Config[:file_cache_path]}/#{::File.basename(::URI.unescape(uri.path))}"
                       Chef::Log.debug("Caching a copy of file #{new_resource.source} at #{cache_file_path}")
 
